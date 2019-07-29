@@ -5,8 +5,36 @@ block styles
 block content
     #app
         section.container
-            .card-panel
-                h3 hello
+            ul.collapsible
+                li
+                    .collapsible-header fjjsd
+                    .collapsible-body.white
+
+                        #holder(@contextmenu.prevent="showContextMenu($event, document)")
+
+        ul.vertical-menu-container#cntnr
+            //- li
+                a.btn-floating.hoverable.waves-effect.waves-light.yellow
+                    i.material-icons comment
+                    //- comment
+            li
+                a.btn-floating.hoverable.waves-effect.waves-light.red(@contextmenu="signDocument($event)")
+                    i.material-icons edit 
+                    //- sign
+
+            //- li
+                a.btn-floating.hoverable.waves-effect.waves-light.orange
+                    i.material-icons forward
+                    //- forward
+            //- li
+                a.btn-floating.hoverable.waves-effect.waves-light.green
+                    i.material-icons done
+                    //- save changes
+            //- li
+                a.btn-floating.hoverable.waves-effect.waves-light.blue
+                    i.material-icons done_all
+                    //- finalize
+
 
 block scripts
     script(src="/js/lib/pdf.js")

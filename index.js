@@ -24,6 +24,7 @@ app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
 app.use(express.static('public'))
+app.use('/uploads',express.static('uploads'))
 
 app.set('view engine', 'pug')
 app.set('views', './views')
