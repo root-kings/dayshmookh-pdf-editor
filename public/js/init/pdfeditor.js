@@ -1,4 +1,4 @@
-let documentsVue
+let editorVue
 
 // ---
 
@@ -10,22 +10,27 @@ PDFJS.GlobalWorkerOptions.workerSrc = '/js/lib/pdf.worker.js'
 // ---
 
 document.addEventListener('DOMContentLoaded', function() {
-	documentsVue = new Vue({
+	editorVue = new Vue({
 		el: '#app',
 		data: {
 			pdfFile: '/uploads/sample.pdf',
 			doc: {
 				_id: 'abc123'
-			}
+			},
+			selectedCanvas: '',
+			selectedCanvasContainer: ''
 		},
 
 		methods: {
 			renderPDF: function(url, canvasContainer) {
 				let doc = this.doc
 				function renderPage(page) {
-					var wrapper = document.createElement('div')
-					wrapper.className = 'canvas-wrapper'
+					var pageContainer = document.createElement('div')
+					pageContainer.className = 'page-container'
+					pageContainer.id = `${doc._id}_pageContainer_page${page.pageIndex}`
+
 					var canvas = document.createElement('canvas')
+					addClass(canvas, 'page-content')
 					console.log(page)
 					canvas.id = `${doc._id}_page${page.pageIndex}`
 					var ctx = canvas.getContext('2d')
@@ -40,8 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					canvas.height = viewport.height
 					canvas.width = viewport.width
 
-					wrapper.appendChild(canvas)
-					canvasContainer.appendChild(wrapper)
+
+					pageContainer.appendChild(canvas)
+					canvasContainer.appendChild(pageContainer)
 
 					page.render(renderContext)
 				}
@@ -57,7 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			showContextMenu: function(e, doc) {
 				// this.selectedDocument = doc
 				// console.log(e.clientX + ',' + e.clientY)
-				console.log(e.target.id)
+				// console.log(e.target.id)
+				this.selectedCanvas = e.target.id
+				this.selectedCanvasContainer = e.target.parentElement.id
 				let cntnr = document.getElementById('cntnr')
 				cntnr.style.left = e.clientX
 				cntnr.style.top = e.clientY
@@ -69,19 +77,25 @@ document.addEventListener('DOMContentLoaded', function() {
 					document.removeEventListener('click', hidemenu)
 				})
 			},
-			signDocument: function($event) {
+			signDocument: function(event) {
 				// let doc = this.selectedDocument
 
 				// doc.isBeingEdited = true
 				// doc.isBeingSigned = true
 
-				let doccanvas = $event.target
+				let doccanvas = document.getElementById(this.selectedCanvas)
+				let konvaContainer = document.createElement('div')
+				konvaContainer.id = `${this.selectedCanvas}_konva`
+				addClass(konvaContainer, 'konva-container')
 
-				console.log(doccanvas)
-				return
+				document.getElementById(this.selectedCanvasContainer).appendChild(konvaContainer)
+
+				// console.log(doccanvas.style)
+				console.log(getComputedStyle(doccanvas))
+				// return
 
 				var stage = new Konva.Stage({
-					container: `konva-container${doc._id}`, // id of container <div>
+					container: konvaContainer.id, // id of container <div>
 					width: doccanvas.width,
 					height: doccanvas.height
 				})
@@ -90,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				var complexText = new Konva.Text({
 					x: 20,
 					y: 60,
-					text: `Digitally Signed by:\n${doc.currentOfficer.name}\nOn: ${new moment()}\nTransaction ID: ${'123456'}.`,
+					text: `Digitally Signed by:\n${'Krushn Dayshmookh'}\nOn: ${new moment()}\nTransaction ID: ${'123456'}.`,
 					fontSize: 16,
 					fontFamily: 'Calibri',
 					fill: '#555',
@@ -122,6 +136,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				stage.add(layer)
 
 				layer.draw()
+
+				let konvacanvas = konvaContainer.querySelector('canvas')
+				// console.log(konvacanvas)
+
+				konvaContainer.style.position = `relative`
+				konvaContainer.style.top = `-${konvacanvas.height}`
+				konvaContainer.parentElement.style.height = konvacanvas.height
+
 			}
 		},
 

@@ -18,7 +18,7 @@ block content
                     i.material-icons comment
                     //- comment
             li
-                a.btn-floating.hoverable.waves-effect.waves-light.red(@contextmenu="signDocument($event)")
+                a.btn-floating.hoverable.waves-effect.waves-light.red(@click="signDocument($event)")
                     i.material-icons edit 
                     //- sign
 
@@ -39,4 +39,5 @@ block content
 block scripts
     script(src="/js/lib/pdf.js")
     script(src="/js/lib/pdf.worker.js")
+    script(src="/js/lib/konva.min.js")
     script(src="/js/init/pdfeditor.js")
