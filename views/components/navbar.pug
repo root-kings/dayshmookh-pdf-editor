@@ -1,0 +1,28 @@
+.navbar-fixed
+    nav.transparent.z-depth-0
+        .nav-wrapper
+            a.white-text(data-target="slide-out" href="#").sidenav-trigger
+                i.material-icons menu
+            block navtitle
+                a.white-text.brand-logo.truncate(href="/") PDF
+
+            ul.right.hide-on-med-and-down
+                li
+                    a.white-text(href="/") Home
+
+               
+
+
+ul#slide-out.sidenav
+    //- li
+        .user-view
+            .background
+                img(src="/images/office.jpg")
+            a(href="#name")
+                span.white-text.name {user.name}
+            a(href="#email")
+                span.white-text.email {user.email}
+    li
+        a(href="/") Home
+            i.material-icons.left home
+    
